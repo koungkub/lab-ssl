@@ -1,0 +1,33 @@
+version: '3'
+
+services: 
+  nginx:
+    build: .
+    ports: 
+      - 1323:1323
+    volumes: 
+      - conf:/etc/letsencrypt
+      - web:/var/www/html
+      - var:/var/lib/letsencrypt
+    networks: 
+      - soa
+  
+  certbot:
+    image: certbot/certbot
+    volumes: 
+      - conf:/etc/letsencrypt
+      - web:/var/www/html
+      - var:/var/lib/letsencrypt
+    depends_on: 
+      - nginx
+    networks: 
+      - soa
+    command: certonly --webroot --webroot-path=/var/www/html --email 59070025@it.kmitl.ac.th --agree-tos --no-eff-email --staging -d soa.smartfishermans.com
+
+volumes: 
+  conf:
+  var:
+  web:
+
+networks: 
+  soa:
